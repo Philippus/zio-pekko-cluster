@@ -1,7 +1,7 @@
-package zio.akka.cluster.sharding
+package zio.pekko.cluster.sharding
 
 import scala.language.postfixOps
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.clock.Clock
 import zio.duration._
@@ -13,18 +13,20 @@ import zio.{ ExecutionStrategy, Has, Managed, Promise, Task, UIO, ZIO, ZLayer }
 object ShardingSpec extends DefaultRunnableSpec {
 
   val config: Config = ConfigFactory.parseString(s"""
-                                                    |akka {
+                                                    |pekko {
                                                     |  actor {
                                                     |    provider = "cluster"
                                                     |  }
-                                                    |  remote {
+                                                    |  remote.artery.enabled = false
+                                                    |  remote.classic {
+                                                    |    enabled-transports = ["pekko.remote.classic.netty.tcp"]
                                                     |    netty.tcp {
                                                     |      hostname = "127.0.0.1"
-                                                    |      port = 2551
+                                                    |      port = 7355
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["akka.tcp://Test@127.0.0.1:2551"]
+                                                    |    seed-nodes = ["pekko.tcp://Test@127.0.0.1:7355"]
                                                     |    jmx.multi-mbeans-in-same-jvm = on
                                                     |  }
                                                     |}
@@ -36,18 +38,20 @@ object ShardingSpec extends DefaultRunnableSpec {
     )
 
   val config2: Config = ConfigFactory.parseString(s"""
-                                                     |akka {
+                                                     |pekko {
                                                      |  actor {
                                                      |    provider = "cluster"
                                                      |  }
-                                                     |  remote {
+                                                     |  remote.artery.enabled = false
+                                                     |  remote.classic {
+                                                     |    enabled-transports = ["pekko.remote.classic.netty.tcp"]
                                                      |    netty.tcp {
                                                      |      hostname = "127.0.0.1"
-                                                     |      port = 2552
+                                                     |      port = 7356
                                                      |    }
                                                      |  }
                                                      |  cluster {
-                                                     |    seed-nodes = ["akka.tcp://Test@127.0.0.1:2551"]
+                                                     |    seed-nodes = ["pekko.tcp://Test@127.0.0.1:7356"]
                                                      |    jmx.multi-mbeans-in-same-jvm = on
                                                      |  }
                                                      |}
@@ -184,9 +188,9 @@ object ShardingSpec extends DefaultRunnableSpec {
                 onMessage1 = (_: String) => p1.succeed(()).unit
                 onMessage2 = (_: String) => p2.succeed(()).unit
                 sharding1 <- Sharding.start(shardName, onMessage1).provideLayer(ZLayer.succeedMany(a1))
-                _         <- Sharding.start(shardName, onMessage2).provideLayer(ZLayer.succeedMany(a2))
+                sharding2 <- Sharding.start(shardName, onMessage2).provideLayer(ZLayer.succeedMany(a2))
                 _         <- sharding1.send("1", "hi")
-                _         <- sharding1.send("2", "hi")
+                _         <- sharding2.send("2", "hi")
                 _         <- p1.await
                 _         <- p2.await
               } yield ()

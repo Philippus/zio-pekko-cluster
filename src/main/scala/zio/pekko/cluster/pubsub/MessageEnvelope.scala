@@ -1,3 +1,3 @@
-package zio.akka.cluster.pubsub
+package zio.pekko.cluster.pubsub
 
 case class MessageEnvelope[Msg](msg: Msg)

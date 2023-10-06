@@ -1,40 +1,35 @@
-# ZIO Wrapper for Akka Cluster
+# ZIO Pekko Cluster
 
-[![Project stage: Production Ready][project-stage-badge: Production Ready]][project-stage-page]
-![CI](https://github.com/zio/zio-akka-cluster/workflows/CI/badge.svg)
-
-[project-stage-badge: Production Ready]: https://img.shields.io/badge/Project%20Stage-Production%20Ready-brightgreen.svg
-[project-stage-page]: https://github.com/zio/zio/wiki/Project-Stages
-
-This library is a [ZIO](https://github.com/zio/zio) wrapper for [Akka Cluster](https://doc.akka.io/docs/akka/current/index-cluster.html).
-It exposes a purely functional API allowing you to leverage the distributed features of Akka without the need to use the actor model.
+This library is a [ZIO](https://github.com/zio/zio) wrapper for [Pekko Cluster](https://pekko.apache.org/docs/pekko/current/index-cluster.html).
+It is a fork of [ZIO Akka Cluster](https://github.com/zio/zio-akka-cluster) providing the same functionality for Apache Pekko.
+It exposes a purely functional API allowing you to leverage the distributed features of Pekko without the need to use the actor model.
 
 The following features are available:
-- Akka Cluster (join, leave, cluster state, cluster events)
-- Akka Distributed PubSub
-- Akka Cluster Sharding
+- Pekko Cluster (join, leave, cluster state, cluster events)
+- Pekko Distributed PubSub
+- Pekko Cluster Sharding
 
 ## Add the dependency
 
-To use `zio-akka-cluster`, add the following line in your `build.sbt` file:
+To use `zio-pekko-cluster`, add the following line in your `build.sbt` file:
 
 ```
-libraryDependencies += "dev.zio" %% "zio-akka-cluster" % "0.2.0"
+libraryDependencies += "nl.gn0s1s" %% "zio-pekko-cluster" % "0.2.0"
 ```
 
 ## How to use
 
-In order to use the library, you need to provide an `ActorSystem`. Refer to the [Akka Documentation](https://doc.akka.io/docs/akka/current/general/actor-systems.html) if you need help.
+In order to use the library, you need to provide an `ActorSystem`. Refer to the [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/general/actor-systems.html) if you need help.
 
-### Akka Cluster
+### Pekko Cluster
 
 The features described here require the following import:
 ```scala
-import zio.akka.cluster.Cluster
+import zio.pekko.cluster.Cluster
 ```
 
-When you create an ActorSystem, Akka will look at your configuration file and join a cluster if seed nodes are specified.
-See [Akka Documentation](https://doc.akka.io/docs/akka/current/cluster-usage.html) to know more about cluster usage.
+When you create an ActorSystem, Pekko will look at your configuration file and join a cluster if seed nodes are specified.
+See [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/cluster-usage.html) to know more about cluster usage.
 You can also manually join a cluster using `Cluster.join`.
 
 ```scala
@@ -63,15 +58,15 @@ Finally, you can leave the current cluster using `Cluster.leave`.
 val leave: ZIO[Has[ActorSystem], Throwable, Unit]
 ```
 
-### Akka PubSub
+### Pekko PubSub
 
 The features described here require the following import:
 ```scala
-import zio.akka.cluster.pubsub.PubSub
+import zio.pekko.cluster.pubsub.PubSub
 ```
 
-Akka Distributed PubSub lets you publish and receive events from any node in the cluster.
-See [Akka Documentation](https://doc.akka.io/docs/akka/current/distributed-pub-sub.html) to know more about PubSub usage.
+Pekko Distributed PubSub lets you publish and receive events from any node in the cluster.
+See [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/distributed-pub-sub.html) to know more about PubSub usage.
 To create a `PubSub` object which can both publish and subscribe, use `PubSub.createPubSub`.
 
 ```scala
@@ -103,16 +98,16 @@ def listen(topic: String, group: Option[String] = None): Task[Queue[A]] =
 ```
 
 **Note on Serialization**
-Akka messages are serialized when they are sent across the network. By default, Java serialization is used but it is not recommended to use it in production.
-See [Akka Documentation](https://doc.akka.io/docs/akka/current/serialization.html) to see how to provide your own serializer.
-This library wraps messages inside of a `zio.akka.cluster.pubsub.MessageEnvelope` case class, so your serializer needs to cover it as well.
+Pekko messages are serialized when they are sent across the network. By default, Java serialization is used, but it is not recommended to use it in production.
+See [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/serialization.html) to see how to provide your own serializer.
+This library wraps messages inside a `zio.pekko.cluster.pubsub.MessageEnvelope` case class, so your serializer needs to cover it as well.
 
 **Example:**
 
 ```scala
-import akka.actor.ActorSystem
+import pekko.actor.ActorSystem
 import zio.{ Has, Managed, Task, ZLayer }
-import zio.akka.cluster.pubsub.PubSub
+import zio.pekko.cluster.pubsub.PubSub
 
 val actorSystem: ZLayer[Any, Throwable, Has[ActorSystem]] =
   ZLayer.fromManaged(Managed.make(Task(ActorSystem("Test")))(sys => Task.fromFuture(_ => sys.terminate()).either))
@@ -125,16 +120,16 @@ val actorSystem: ZLayer[Any, Throwable, Has[ActorSystem]] =
 } yield firstMsg).provideLayer(actorSystem)
 ```
 
-### Akka Cluster Sharding
+### Pekko Cluster Sharding
 
 The features described here require the following import:
 ```scala
-import zio.akka.cluster.sharding.Sharding
+import zio.pekko.cluster.sharding.Sharding
 ```
 
-Akka Cluster Sharding lets you distribute entities across a cluster and communicate with them using a logical ID, without having to care about their physical location.
+Pekko Cluster Sharding lets you distribute entities across a cluster and communicate with them using a logical ID, without having to care about their physical location.
 It is particularly useful when you have some business logic that needs to be processed by a single process across a cluster (e.g. some state that should be only in one place at a given time, a single writer to a database, etc).
-See [Akka Documentation](https://doc.akka.io/docs/akka/current/cluster-sharding.html) to know more about Cluster Sharding usage.
+See [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/cluster-sharding.html) to know more about Cluster Sharding usage.
 
 To start sharding a given entity type on a node, use `Sharding.start`. It returns a `Sharding` object which can be used to send messages, stop or passivate sharded entities.
 
@@ -152,7 +147,7 @@ It requires:
     - `Entity[State]` gives you access to a `Ref[Option[State]]` which you can use to read or modify the state of the entity. The state is set to `None` when the entity is started. This `Entity` object also allows you to get the entity ID and to stop the entity from within (e.g. after some time of inactivity).
     - `Nothing` means the effect should not fail, you must catch and handle potential errors
     - `Unit` means the effect should not return anything
-- `numberOfShards` indicates how entities will be split across nodes. See [this page](https://doc.akka.io/docs/akka/current/cluster-sharding.html#an-example) for more information.
+- `numberOfShards` indicates how entities will be split across nodes. See [this page](https://pekko.apache.org/docs/pekko/current/cluster-sharding.html#basic-example) for more information.
 
 You can also use `Sharding.startProxy` if you need to send messages to entities located on `other` nodes.
 
@@ -167,15 +162,15 @@ def passivate(entityId: String): Task[Unit]
 ```
 
 **Note on Serialization**
-Akka messages are serialized when they are sent across the network. By default, Java serialization is used, but it is not recommended in production.
-See [Akka Documentation](https://doc.akka.io/docs/akka/current/serialization.html) to see how to provide your own serializer.
-This library wraps messages inside of a `zio.akka.cluster.sharding.MessageEnvelope` case class, so your serializer needs to cover it as well.
+Pekko messages are serialized when they are sent across the network. By default, Java serialization is used, but it is not recommended in production.
+See [Pekko Documentation](https://pekko.apache.org/docs/pekko/current/serialization.html) to see how to provide your own serializer.
+This library wraps messages inside a `zio.pekko.cluster.sharding.MessageEnvelope` case class, so your serializer needs to cover it as well.
 
 **Example:**
 
 ```scala
-import akka.actor.ActorSystem
-import zio.akka.cluster.sharding.{ Entity, Sharding }
+import pekko.actor.ActorSystem
+import zio.pekko.cluster.sharding.{ Entity, Sharding }
 import zio.{ Has, Managed, Task, ZIO, ZLayer }
 
 val actorSystem: ZLayer[Any, Throwable, Has[ActorSystem]] =

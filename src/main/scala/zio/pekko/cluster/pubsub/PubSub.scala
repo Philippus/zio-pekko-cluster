@@ -1,8 +1,10 @@
-package zio.akka.cluster.pubsub
+package zio.pekko.cluster.pubsub
 
-import akka.actor.{ ActorRef, ActorSystem }
-import akka.cluster.pubsub.DistributedPubSub
-import zio.akka.cluster.pubsub.impl.{ PublisherImpl, SubscriberImpl }
+import org.apache.pekko.actor.{ ActorRef, ActorSystem }
+import org.apache.pekko.cluster.pubsub.DistributedPubSub
+
+import zio.pekko.cluster.pubsub.impl.{ PublisherImpl, SubscriberImpl }
+import zio.pekko.cluster.pubsub.impl.{ PublisherImpl, SubscriberImpl }
 import zio.{ Has, Queue, Task, ZIO }
 
 /**

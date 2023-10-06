@@ -1,6 +1,6 @@
-package zio.akka.cluster.sharding
+package zio.pekko.cluster.sharding
 
-import zio.akka.cluster.sharding.MessageEnvelope.Payload
+import MessageEnvelope.Payload
 
 case class MessageEnvelope(entityId: String, data: Payload)
 

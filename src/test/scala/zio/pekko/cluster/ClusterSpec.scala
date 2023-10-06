@@ -1,7 +1,7 @@
-package zio.akka.cluster
+package zio.pekko.cluster
 
-import akka.actor.ActorSystem
-import akka.cluster.ClusterEvent.MemberLeft
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.cluster.ClusterEvent.MemberLeft
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.test.Assertion._
 import zio.test._
@@ -14,18 +14,20 @@ object ClusterSpec extends DefaultRunnableSpec {
     suite("ClusterSpec")(
       testM("receive cluster events") {
         val config: Config = ConfigFactory.parseString(s"""
-                                                          |akka {
+                                                          |pekko {
                                                           |  actor {
                                                           |    provider = "cluster"
                                                           |  }
-                                                          |  remote {
+                                                          |  remote.artery.enabled = false
+                                                          |  remote.classic {
+                                                          |    enabled-transports = ["pekko.remote.classic.netty.tcp"]
                                                           |    netty.tcp {
                                                           |      hostname = "127.0.0.1"
-                                                          |      port = 2551
+                                                          |      port = 7355
                                                           |    }
                                                           |  }
                                                           |  cluster {
-                                                          |    seed-nodes = ["akka.tcp://Test@127.0.0.1:2551"]
+                                                          |    seed-nodes = ["pekko.tcp://Test@127.0.0.1:7355"]
                                                           |  }
                                                           |}
                   """.stripMargin)
