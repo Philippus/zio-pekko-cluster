@@ -19,13 +19,15 @@ scalaVersion := crossScalaVersions.value.last
 parallelExecution in Test := false
 fork in Test := true
 
+val zioVersion = "1.0.18"
+
 libraryDependencies ++= Seq(
-  "dev.zio"          %% "zio"                    % "1.0.13",
-  "dev.zio"          %% "zio-streams"            % "1.0.13",
+  "dev.zio"          %% "zio"                    % zioVersion,
+  "dev.zio"          %% "zio-streams"            % zioVersion,
   "org.apache.pekko" %% "pekko-cluster-tools"    % "1.0.1",
   "org.apache.pekko" %% "pekko-cluster-sharding" % "1.0.1",
-  "dev.zio"          %% "zio-test"               % "1.0.13"       % "test",
-  "dev.zio"          %% "zio-test-sbt"           % "1.0.13"       % "test",
+  "dev.zio"          %% "zio-test"               % zioVersion     % "test",
+  "dev.zio"          %% "zio-test-sbt"           % zioVersion     % "test",
   "io.netty"          % "netty"                  % "3.10.6.Final" % "test",
   compilerPlugin("org.typelevel" %% "kind-projector"     % "0.10.3"),
   compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
