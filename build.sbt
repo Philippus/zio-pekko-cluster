@@ -16,8 +16,9 @@ developers := List(
 crossScalaVersions := List("2.12.18", "2.13.12")
 scalaVersion := crossScalaVersions.value.last
 
-parallelExecution in Test := false
-fork in Test := true
+Test / parallelExecution := false
+Test / fork := true
+run / fork := true
 
 libraryDependencies ++= Seq(
   "dev.zio"          %% "zio"                    % "1.0.13",
@@ -63,5 +64,3 @@ scalacOptions ++= Seq(
     )
   case _             => Nil
 })
-
-fork in run := true
