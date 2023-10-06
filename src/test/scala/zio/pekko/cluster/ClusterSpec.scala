@@ -2,11 +2,11 @@ package zio.pekko.cluster
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.cluster.ClusterEvent.MemberLeft
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import zio.test.Assertion._
 import zio.test._
 import zio.test.environment.TestEnvironment
-import zio.{ Managed, Task, ZLayer }
+import zio.{Managed, Task, ZLayer}
 
 object ClusterSpec extends DefaultRunnableSpec {
 

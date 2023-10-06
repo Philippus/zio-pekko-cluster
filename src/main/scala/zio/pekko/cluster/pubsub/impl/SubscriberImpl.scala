@@ -1,11 +1,11 @@
 package zio.pekko.cluster.pubsub.impl
 
-import org.apache.pekko.actor.{ Actor, ActorRef, ActorSystem, PoisonPill, Props }
-import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{ Subscribe, SubscribeAck }
-import zio.Exit.{ Failure, Success }
+import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
+import zio.Exit.{Failure, Success}
 import SubscriberImpl.SubscriberActor
-import zio.pekko.cluster.pubsub.{ MessageEnvelope, Subscriber }
-import zio.{ Promise, Queue, Runtime, Task }
+import zio.pekko.cluster.pubsub.{MessageEnvelope, Subscriber}
+import zio.{Promise, Queue, Runtime, Task}
 
 private[pubsub] trait SubscriberImpl[A] extends Subscriber[A] {
   val getActorSystem: ActorSystem
@@ -24,12 +24,12 @@ private[pubsub] trait SubscriberImpl[A] extends Subscriber[A] {
 
 object SubscriberImpl {
   private[impl] class SubscriberActor[A](
-    mediator: ActorRef,
-    topic: String,
-    group: Option[String],
-    rts: Runtime[Any],
-    queue: Queue[A],
-    subscribed: Promise[Nothing, Unit]
+      mediator: ActorRef,
+      topic: String,
+      group: Option[String],
+      rts: Runtime[Any],
+      queue: Queue[A],
+      subscribed: Promise[Nothing, Unit]
   ) extends Actor {
 
     mediator ! Subscribe(topic, group, self)
