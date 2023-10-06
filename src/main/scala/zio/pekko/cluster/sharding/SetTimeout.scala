@@ -1,4 +1,4 @@
-package zio.akka.cluster.sharding
+package zio.pekko.cluster.sharding
 
 import scala.concurrent.duration.Duration
 

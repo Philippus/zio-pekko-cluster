@@ -1,16 +1,16 @@
-package zio.akka.cluster
+package zio.pekko.cluster
 
-import akka.actor.{ Actor, ActorSystem, Address, PoisonPill, Props }
-import akka.cluster.ClusterEvent._
+import org.apache.pekko.actor.{ Actor, ActorSystem, Address, PoisonPill, Props }
+import org.apache.pekko.cluster.ClusterEvent._
 import zio.Exit.{ Failure, Success }
 import zio.{ Has, Queue, Runtime, Task, ZIO }
 
 object Cluster {
 
-  private val cluster: ZIO[Has[ActorSystem], Throwable, akka.cluster.Cluster] =
+  private val cluster: ZIO[Has[ActorSystem], Throwable, org.apache.pekko.cluster.Cluster] =
     for {
       actorSystem <- ZIO.access[Has[ActorSystem]](_.get)
-      cluster     <- Task(akka.cluster.Cluster(actorSystem))
+      cluster     <- Task(org.apache.pekko.cluster.Cluster(actorSystem))
     } yield cluster
 
   /**
@@ -74,7 +74,7 @@ object Cluster {
 
     val initialState: SubscriptionInitialStateMode =
       if (initialStateAsEvents) InitialStateAsEvents else InitialStateAsSnapshot
-    akka.cluster.Cluster(context.system).subscribe(self, initialState, classOf[ClusterDomainEvent])
+    org.apache.pekko.cluster.Cluster(context.system).subscribe(self, initialState, classOf[ClusterDomainEvent])
 
     def receive: PartialFunction[Any, Unit] = {
       case ev: ClusterDomainEvent =>

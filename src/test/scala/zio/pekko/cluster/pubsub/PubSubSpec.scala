@@ -1,6 +1,6 @@
-package zio.akka.cluster.pubsub
+package zio.pekko.cluster.pubsub
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.test.Assertion._
 import zio.test._
@@ -10,18 +10,20 @@ import zio.{ ExecutionStrategy, Has, Managed, Task, ZLayer }
 object PubSubSpec extends DefaultRunnableSpec {
 
   val config: Config = ConfigFactory.parseString(s"""
-                                                    |akka {
+                                                    |pekko {
                                                     |  actor {
                                                     |    provider = "cluster"
                                                     |  }
-                                                    |  remote {
+                                                    |  remote.artery.enabled = false
+                                                    |  remote.classic {
+                                                    |    enabled-transports = ["pekko.remote.classic.netty.tcp"]
                                                     |    netty.tcp {
                                                     |      hostname = "127.0.0.1"
-                                                    |      port = 2551
+                                                    |      port = 7355
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["akka.tcp://Test@127.0.0.1:2551"]
+                                                    |    seed-nodes = ["pekko.tcp://Test@127.0.0.1:7355"]
                                                     |  }
                                                     |}
            """.stripMargin)
