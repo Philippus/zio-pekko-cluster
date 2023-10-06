@@ -1,9 +1,9 @@
 package zio.pekko.cluster
 
-import org.apache.pekko.actor.{ Actor, ActorSystem, Address, PoisonPill, Props }
+import org.apache.pekko.actor.{Actor, ActorSystem, Address, PoisonPill, Props}
 import org.apache.pekko.cluster.ClusterEvent._
-import zio.Exit.{ Failure, Success }
-import zio.{ Has, Queue, Runtime, Task, ZIO }
+import zio.Exit.{Failure, Success}
+import zio.{Has, Queue, Runtime, Task, ZIO}
 
 object Cluster {
 
@@ -13,52 +13,46 @@ object Cluster {
       cluster     <- Task(org.apache.pekko.cluster.Cluster(actorSystem))
     } yield cluster
 
-  /**
-   *  Returns the current state of the cluster.
-   */
+  /** Returns the current state of the cluster.
+    */
   val clusterState: ZIO[Has[ActorSystem], Throwable, CurrentClusterState] =
     for {
       cluster <- cluster
       state   <- Task(cluster.state)
     } yield state
 
-  /**
-   *  Joins a cluster using the provided seed nodes.
-   */
+  /** Joins a cluster using the provided seed nodes.
+    */
   def join(seedNodes: List[Address]): ZIO[Has[ActorSystem], Throwable, Unit] =
     for {
       cluster <- cluster
       _       <- Task(cluster.joinSeedNodes(seedNodes))
     } yield ()
 
-  /**
-   *  Leaves the current cluster.
-   */
+  /** Leaves the current cluster.
+    */
   val leave: ZIO[Has[ActorSystem], Throwable, Unit] =
     for {
       cluster <- cluster
       _       <- Task(cluster.leave(cluster.selfAddress))
     } yield ()
 
-  /**
-   *  Subscribes to the current cluster events. It returns an unbounded queue that will be fed with cluster events.
-   *  `initialStateAsEvents` indicates if you want to receive previous cluster events leading to the current state, or only future events.
-   *  To unsubscribe, use `queue.shutdown`.
-   *  To use a bounded queue, see `clusterEventsWith`.
-   */
+  /** Subscribes to the current cluster events. It returns an unbounded queue that will be fed with cluster events.
+    * `initialStateAsEvents` indicates if you want to receive previous cluster events leading to the current state, or
+    * only future events. To unsubscribe, use `queue.shutdown`. To use a bounded queue, see `clusterEventsWith`.
+    */
   def clusterEvents(
-    initialStateAsEvents: Boolean = false
+      initialStateAsEvents: Boolean = false
   ): ZIO[Has[ActorSystem], Throwable, Queue[ClusterDomainEvent]] =
     Queue.unbounded[ClusterDomainEvent].tap(clusterEventsWith(_, initialStateAsEvents))
 
-  /**
-   *  Subscribes to the current cluster events, using the provided queue to push the events.
-   *  `initialStateAsEvents` indicates if you want to receive previous cluster events leading to the current state, or only future events.
-   *  To unsubscribe, use `queue.shutdown`.
-   */
+  /** Subscribes to the current cluster events, using the provided queue to push the events. `initialStateAsEvents`
+    * indicates if you want to receive previous cluster events leading to the current state, or only future events. To
+    * unsubscribe, use `queue.shutdown`.
+    */
   def clusterEventsWith(
-    queue: Queue[ClusterDomainEvent],
-    initialStateAsEvents: Boolean = false
+      queue: Queue[ClusterDomainEvent],
+      initialStateAsEvents: Boolean = false
   ): ZIO[Has[ActorSystem], Throwable, Unit] =
     for {
       rts         <- Task.runtime
@@ -67,9 +61,9 @@ object Cluster {
     } yield ()
 
   private[cluster] class SubscriberActor(
-    rts: Runtime[Any],
-    queue: Queue[ClusterDomainEvent],
-    initialStateAsEvents: Boolean
+      rts: Runtime[Any],
+      queue: Queue[ClusterDomainEvent],
+      initialStateAsEvents: Boolean
   ) extends Actor {
 
     val initialState: SubscriptionInitialStateMode =

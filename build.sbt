@@ -1,8 +1,8 @@
-name := "zio-pekko-cluster"
+name         := "zio-pekko-cluster"
 organization := "nl.gn0s1s"
-startYear := Some(2023)
-homepage := Some(url("https://github.com/philippus/zio-pekko-cluster"))
-licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
+startYear    := Some(2023)
+homepage     := Some(url("https://github.com/philippus/zio-pekko-cluster"))
+licenses     := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
 
 developers := List(
   Developer(
@@ -14,10 +14,10 @@ developers := List(
 )
 
 crossScalaVersions := List("2.12.18", "2.13.12")
-scalaVersion := crossScalaVersions.value.last
+scalaVersion       := crossScalaVersions.value.last
 
 parallelExecution in Test := false
-fork in Test := true
+fork in Test              := true
 
 val zioVersion = "1.0.18"
 
