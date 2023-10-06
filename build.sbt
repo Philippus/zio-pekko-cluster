@@ -6,10 +6,10 @@ licenses     := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE
 
 developers := List(
   Developer(
-    "ghostdogpr",
-    "Pierre Ricadat",
-    "ghostdogpr@gmail.com",
-    url("https://github.com/ghostdogpr")
+    id = "philippus",
+    name = "Philippus Baalman",
+    email = "",
+    url = url("https://github.com/philippus")
   )
 )
 
