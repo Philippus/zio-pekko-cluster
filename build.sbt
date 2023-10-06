@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
   "dev.zio"          %% "zio-test"               % zioVersion     % "test",
   "dev.zio"          %% "zio-test-sbt"           % zioVersion     % "test",
   "io.netty"          % "netty"                  % "3.10.6.Final" % "test",
-  compilerPlugin("org.typelevel" %% "kind-projector"     % "0.10.3"),
+  compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.2" cross CrossVersion.full),
   compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 )
 
