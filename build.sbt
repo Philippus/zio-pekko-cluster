@@ -1,18 +1,9 @@
-val mainScala = "2.13.1"
-val allScala  = Seq("2.11.12", "2.12.10", mainScala)
-
-organization := "dev.zio"
-homepage := Some(url("https://github.com/zio/zio-akka-cluster"))
-name := "zio-akka-cluster"
+name := "zio-pekko-cluster"
+organization := "nl.gn0s1s"
+startYear := Some(2023)
+homepage := Some(url("https://github.com/philippus/zio-pekko-cluster"))
 licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0"))
-scalaVersion := mainScala
-parallelExecution in Test := false
-fork in Test := true
-pgpPublicRing := file("/tmp/public.asc")
-pgpSecretRing := file("/tmp/secret.asc")
-scmInfo := Some(
-  ScmInfo(url("https://github.com/zio/zio-akka-cluster/"), "scm:git:git@github.com:zio/zio-akka-cluster.git")
-)
+
 developers := List(
   Developer(
     "ghostdogpr",
@@ -21,6 +12,12 @@ developers := List(
     url("https://github.com/ghostdogpr")
   )
 )
+
+crossScalaVersions := List("2.12.18", "2.13.12")
+scalaVersion := crossScalaVersions.value.last
+
+parallelExecution in Test := false
+fork in Test := true
 
 libraryDependencies ++= Seq(
   "dev.zio"          %% "zio"                    % "1.0.13",
@@ -51,16 +48,6 @@ scalacOptions ++= Seq(
   "-Ywarn-unused",
   "-Ywarn-value-discard"
 ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-  case Some((2, 11)) =>
-    Seq(
-      "-Yno-adapted-args",
-      "-Ypartial-unification",
-      "-Ywarn-inaccessible",
-      "-Ywarn-infer-any",
-      "-Ywarn-nullary-override",
-      "-Ywarn-nullary-unit",
-      "-Xfuture"
-    )
   case Some((2, 12)) =>
     Seq(
       "-Xsource:2.13",
@@ -80,8 +67,3 @@ scalacOptions ++= Seq(
 })
 
 fork in run := true
-
-crossScalaVersions := allScala
-
-addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
-addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
