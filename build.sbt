@@ -16,8 +16,10 @@ developers := List(
 crossScalaVersions := List("2.12.18", "2.13.12")
 scalaVersion       := crossScalaVersions.value.last
 
-parallelExecution in Test := false
-fork in Test              := true
+
+Test / parallelExecution := false
+Test / fork := true
+run / fork := true
 
 val zioVersion = "1.0.18"
 
@@ -32,8 +34,6 @@ libraryDependencies ++= Seq(
   compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.2" cross CrossVersion.full),
   compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 )
-
-testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -67,5 +67,3 @@ scalacOptions ++= Seq(
     )
   case _             => Nil
 })
-
-fork in run := true
