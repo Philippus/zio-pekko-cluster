@@ -31,8 +31,6 @@ libraryDependencies ++= Seq(
   compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 )
 
-testFrameworks := Seq(new TestFramework("zio.test.sbt.ZTestFramework"))
-
 scalacOptions ++= Seq(
   "-deprecation",
   "-encoding",
