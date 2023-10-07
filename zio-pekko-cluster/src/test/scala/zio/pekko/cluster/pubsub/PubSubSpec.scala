@@ -1,12 +1,12 @@
 package zio.pekko.cluster.pubsub
 
 import org.apache.pekko.actor.ActorSystem
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import zio.test.Assertion._
 import zio.test._
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
-import zio.{ ExecutionStrategy, ZIO, ZLayer }
+import zio.{ExecutionStrategy, ZIO, ZLayer}
 
 object PubSubSpec extends ZIOSpecDefault {
 

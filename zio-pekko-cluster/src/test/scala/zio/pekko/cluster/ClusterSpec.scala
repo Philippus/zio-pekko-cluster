@@ -4,7 +4,7 @@ import scala.language.postfixOps
 
 import org.apache.pekko.actor.ActorSystem
 import org.apache.pekko.cluster.ClusterEvent.MemberLeft
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import zio.stream.ZStream
 import zio.test.Assertion._
 import zio.test._

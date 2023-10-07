@@ -12,9 +12,8 @@ import zio.pekko.cluster.sharding
 import zio.pekko.cluster.sharding.MessageEnvelope.{MessagePayload, PassivatePayload, PoisonPillPayload}
 import zio.{=!=, Ref, Runtime, Tag, Task, UIO, Unsafe, ZIO, ZLayer}
 
-/**
- *  A `Sharding[M]` is able to send messages of type `M` to a sharded entity or to stop one.
- */
+/** A `Sharding[M]` is able to send messages of type `M` to a sharded entity or to stop one.
+  */
 trait Sharding[M] {
 
   def send(entityId: String, data: M): Task[Unit]
@@ -29,20 +28,24 @@ trait Sharding[M] {
 
 object Sharding {
 
-  /**
-   *  Starts cluster sharding on this node for a given entity type.
-   *
-   * @param name the name of the entity type
-   * @param onMessage the behavior of the entity when it receives a message
-   * @param numberOfShards a fixed number of shards
-   * @param askTimeout     a finite duration specifying how long an ask is allowed to wait for an entity to respond
-   * @return a [[Sharding]] object that can be used to send messages to sharded entities
-   */
+  /** Starts cluster sharding on this node for a given entity type.
+    *
+    * @param name
+    *   the name of the entity type
+    * @param onMessage
+    *   the behavior of the entity when it receives a message
+    * @param numberOfShards
+    *   a fixed number of shards
+    * @param askTimeout
+    *   a finite duration specifying how long an ask is allowed to wait for an entity to respond
+    * @return
+    *   a [[Sharding]] object that can be used to send messages to sharded entities
+    */
   def start[R, Msg, State: Tag](
-    name: String,
-    onMessage: Msg => ZIO[Entity[State] with R, Nothing, Unit],
-    numberOfShards: Int = 100,
-    askTimeout: FiniteDuration = 10.seconds
+      name: String,
+      onMessage: Msg => ZIO[Entity[State] with R, Nothing, Unit],
+      numberOfShards: Int = 100,
+      askTimeout: FiniteDuration = 10.seconds
   ): ZIO[ActorSystem with R, Throwable, Sharding[Msg]] =
     for {
       rts            <- ZIO.runtime[ActorSystem with R]
@@ -70,20 +73,24 @@ object Sharding {
       override implicit val timeout: Timeout   = Timeout(askTimeout)
     }
 
-  /**
-   * Starts cluster sharding in proxy mode for a given entity type.
-   *
-   * @param name           the name of the entity type
-   * @param role           an optional role to specify that this entity type is located on cluster nodes with a specific role
-   * @param numberOfShards a fixed number of shards
-   * @param askTimeout     a finite duration specifying how long an ask is allowed to wait for an entity to respond
-   * @return a [[Sharding]] object that can be used to send messages to sharded entities on other nodes
-   */
+  /** Starts cluster sharding in proxy mode for a given entity type.
+    *
+    * @param name
+    *   the name of the entity type
+    * @param role
+    *   an optional role to specify that this entity type is located on cluster nodes with a specific role
+    * @param numberOfShards
+    *   a fixed number of shards
+    * @param askTimeout
+    *   a finite duration specifying how long an ask is allowed to wait for an entity to respond
+    * @return
+    *   a [[Sharding]] object that can be used to send messages to sharded entities on other nodes
+    */
   def startProxy[Msg](
-    name: String,
-    role: Option[String],
-    numberOfShards: Int = 100,
-    askTimeout: FiniteDuration = 10.seconds
+      name: String,
+      role: Option[String],
+      numberOfShards: Int = 100,
+      askTimeout: FiniteDuration = 10.seconds
   ): ZIO[ActorSystem, Throwable, Sharding[Msg]] =
     for {
       rts            <- ZIO.runtime[ActorSystem]
@@ -131,7 +138,7 @@ object Sharding {
   }
 
   private[sharding] class ShardEntity[R, Msg, State: Tag](rts: Runtime[R])(
-    onMessage: Msg => ZIO[Entity[State] with R, Nothing, Unit]
+      onMessage: Msg => ZIO[Entity[State] with R, Nothing, Unit]
   ) extends Actor {
 
     val ref: Ref[Option[State]]                     =

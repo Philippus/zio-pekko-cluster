@@ -8,18 +8,18 @@ val pekkoVersion = "1.0.0"
 
 inThisBuild(
   List(
-    organization := "dev.zio",
-    homepage := Some(url("https://zio.dev/zio-akka-cluster")),
-    licenses := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
-    scalaVersion := mainScala,
+    organization             := "dev.zio",
+    homepage                 := Some(url("https://zio.dev/zio-akka-cluster")),
+    licenses                 := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+    scalaVersion             := mainScala,
     Test / parallelExecution := false,
-    Test / fork := true,
-    pgpPublicRing := file("/tmp/public.asc"),
-    pgpSecretRing := file("/tmp/secret.asc"),
-    scmInfo := Some(
+    Test / fork              := true,
+    pgpPublicRing            := file("/tmp/public.asc"),
+    pgpSecretRing            := file("/tmp/secret.asc"),
+    scmInfo                  := Some(
       ScmInfo(url("https://github.com/zio/zio-akka-cluster/"), "scm:git:git@github.com:zio/zio-akka-cluster.git")
     ),
-    developers := List(
+    developers               := List(
       Developer(
         "ghostdogpr",
         "Pierre Ricadat",
@@ -70,12 +70,12 @@ lazy val `zio-pekko-cluster` = project
   .settings(
     name := "zio-pekko-cluster",
     libraryDependencies ++= Seq(
-      "dev.zio"           %% "zio"                    % zioVersion,
-      "dev.zio"           %% "zio-streams"            % zioVersion,
-      "org.apache.pekko"  %% "pekko-cluster-tools"    % pekkoVersion,
-      "org.apache.pekko"  %% "pekko-cluster-sharding" % pekkoVersion,
-      "dev.zio"           %% "zio-test"               % zioVersion % "test",
-      "dev.zio"           %% "zio-test-sbt"           % zioVersion % "test",
+      "dev.zio"          %% "zio"                    % zioVersion,
+      "dev.zio"          %% "zio-streams"            % zioVersion,
+      "org.apache.pekko" %% "pekko-cluster-tools"    % pekkoVersion,
+      "org.apache.pekko" %% "pekko-cluster-sharding" % pekkoVersion,
+      "dev.zio"          %% "zio-test"               % zioVersion % "test",
+      "dev.zio"          %% "zio-test-sbt"           % zioVersion % "test",
       compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.2" cross CrossVersion.full),
       compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
     ),
@@ -92,13 +92,13 @@ addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck"
 lazy val docs = project
   .in(file("zio-akka-cluster-docs"))
   .settings(
-    publish / skip := true,
-    moduleName := "zio-akka-cluster-docs",
-    projectName := "ZIO Akka Cluster",
-    mainModuleName := (`zio-pekko-cluster` / moduleName).value,
-    projectStage := ProjectStage.ProductionReady,
+    publish / skip                             := true,
+    moduleName                                 := "zio-akka-cluster-docs",
+    projectName                                := "ZIO Akka Cluster",
+    mainModuleName                             := (`zio-pekko-cluster` / moduleName).value,
+    projectStage                               := ProjectStage.ProductionReady,
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(`zio-pekko-cluster`),
-    docsPublishBranch := "series/2.x"
+    docsPublishBranch                          := "series/2.x"
   )
   .enablePlugins(WebsitePlugin)
   .dependsOn(`zio-pekko-cluster`)

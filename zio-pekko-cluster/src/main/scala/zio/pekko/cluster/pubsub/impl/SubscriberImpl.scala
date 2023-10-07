@@ -23,12 +23,12 @@ private[pubsub] trait SubscriberImpl[A] extends Subscriber[A] {
 
 object SubscriberImpl {
   private[impl] class SubscriberActor[A](
-    mediator: ActorRef,
-    topic: String,
-    group: Option[String],
-    rts: Runtime[Any],
-    queue: Queue[A],
-    subscribed: Promise[Nothing, Unit]
+      mediator: ActorRef,
+      topic: String,
+      group: Option[String],
+      rts: Runtime[Any],
+      queue: Queue[A],
+      subscribed: Promise[Nothing, Unit]
   ) extends Actor {
 
     mediator ! Subscribe(topic, group, self)

@@ -2,12 +2,12 @@ package zio.pekko.cluster.sharding
 
 import scala.language.postfixOps
 import org.apache.pekko.actor.ActorSystem
-import com.typesafe.config.{ Config, ConfigFactory }
+import com.typesafe.config.{Config, ConfigFactory}
 import zio.test.Assertion._
 import zio.test._
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
-import zio.{ ExecutionStrategy, Promise, UIO, ZIO, ZLayer }
+import zio.{ExecutionStrategy, Promise, UIO, ZIO, ZLayer}
 import zio._
 
 object ShardingSpec extends ZIOSpecDefault {

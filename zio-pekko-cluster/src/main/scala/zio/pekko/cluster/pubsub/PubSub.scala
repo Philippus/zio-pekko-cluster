@@ -5,16 +5,14 @@ import org.apache.pekko.cluster.pubsub.DistributedPubSub
 import zio.pekko.cluster.pubsub.impl.{PublisherImpl, SubscriberImpl}
 import zio.{Queue, Task, ZIO}
 
-/**
- *  A `Publisher[A]` is able to send messages of type `A` through Pekko PubSub.
- */
+/** A `Publisher[A]` is able to send messages of type `A` through Pekko PubSub.
+  */
 trait Publisher[A] {
   def publish(topic: String, data: A, sendOneMessageToEachGroup: Boolean = false): Task[Unit]
 }
 
-/**
- *  A `Subscriber[A]` is able to receive messages of type `A` through Pekko PubSub.
- */
+/** A `Subscriber[A]` is able to receive messages of type `A` through Pekko PubSub.
+  */
 trait Subscriber[A] {
 
   def listen(topic: String, group: Option[String] = None): Task[Queue[A]] =
@@ -23,9 +21,8 @@ trait Subscriber[A] {
   def listenWith(topic: String, queue: Queue[A], group: Option[String] = None): Task[Unit]
 }
 
-/**
- *  A `PubSub[A]` is able to both send and receive messages of type `A` through Pekko PubSub.
- */
+/** A `PubSub[A]` is able to both send and receive messages of type `A` through Pekko PubSub.
+  */
 trait PubSub[A] extends Publisher[A] with Subscriber[A]
 
 object PubSub {
@@ -33,9 +30,8 @@ object PubSub {
   private def getMediator(actorSystem: ActorSystem): Task[ActorRef] =
     ZIO.attempt(DistributedPubSub(actorSystem).mediator)
 
-  /**
-   *  Creates a new `Publisher[A]`.
-   */
+  /** Creates a new `Publisher[A]`.
+    */
   def createPublisher[A]: ZIO[ActorSystem, Throwable, Publisher[A]] =
     for {
       actorSystem <- ZIO.service[ActorSystem]
@@ -44,9 +40,8 @@ object PubSub {
       override val getMediator: ActorRef = mediator
     }
 
-  /**
-   *  Creates a new `Subscriber[A]`.
-   */
+  /** Creates a new `Subscriber[A]`.
+    */
   def createSubscriber[A]: ZIO[ActorSystem, Throwable, Subscriber[A]] =
     for {
       actorSystem <- ZIO.service[ActorSystem]
@@ -56,9 +51,8 @@ object PubSub {
       override val getMediator: ActorRef       = mediator
     }
 
-  /**
-   *  Creates a new `PubSub[A]`.
-   */
+  /** Creates a new `PubSub[A]`.
+    */
   def createPubSub[A]: ZIO[ActorSystem, Throwable, PubSub[A]] =
     for {
       actorSystem <- ZIO.service[ActorSystem]
