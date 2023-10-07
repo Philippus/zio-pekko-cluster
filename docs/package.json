@@ -1,5 +1,5 @@
 {
-  "name": "@zio.dev/zio-akka-cluster",
-  "description": "ZIO Akka Cluster Documentation",
+  "name": "@zio.dev/zio-pekko-cluster",
+  "description": "ZIO Pekko Cluster Documentation",
   "license": "Apache-2.0"
 }

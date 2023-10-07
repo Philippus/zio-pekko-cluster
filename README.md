@@ -2,40 +2,38 @@
 [//]: # (So please do not edit it manually. Instead, change "docs/index.md" file or sbt setting keys)
 [//]: # (e.g. "readmeDocumentation" and "readmeSupport".)
 
-# ZIO Akka Cluster
+# ZIO Pekko Cluster
 
-The [ZIO Akka Cluster](https://github.com/zio/zio-akka-cluster) library is a ZIO wrapper on [Akka Cluster](https://doc.akka.io/docs/akka/current/index-cluster.html). We can use clustering features of the Akka toolkit without the need to use the actor model.
-
-[![Production Ready](https://img.shields.io/badge/Project%20Stage-Production%20Ready-brightgreen.svg)](https://github.com/zio/zio/wiki/Project-Stages) ![CI Badge](https://github.com/zio/zio-akka-cluster/workflows/CI/badge.svg) [![Sonatype Releases](https://img.shields.io/nexus/r/https/oss.sonatype.org/dev.zio/zio-akka-cluster_2.13.svg?label=Sonatype%20Release)](https://oss.sonatype.org/content/repositories/releases/dev/zio/zio-akka-cluster_2.13/) [![Sonatype Snapshots](https://img.shields.io/nexus/s/https/oss.sonatype.org/dev.zio/zio-akka-cluster_2.13.svg?label=Sonatype%20Snapshot)](https://oss.sonatype.org/content/repositories/snapshots/dev/zio/zio-akka-cluster_2.13/) [![javadoc](https://javadoc.io/badge2/dev.zio/zio-akka-cluster-docs_2.13/javadoc.svg)](https://javadoc.io/doc/dev.zio/zio-akka-cluster-docs_2.13) [![ZIO Akka Cluster](https://img.shields.io/github/stars/zio/zio-akka-cluster?style=social)](https://github.com/zio/zio-akka-cluster)
+The [ZIO Pekko Cluster](https://github.com/philippus/zio-pekko-cluster) library is a ZIO wrapper on [Pekko Cluster](https://pekko.apache.org/docs/pekko/current/index-cluster.html). It is a fork of [ZIO Akka Cluster](https://github.com/zio/zio-akka-cluster) providing the same functionality for Apache Pekko. We can use clustering features of the Pekko toolkit without the need to use the actor model.
 
 ## Introduction
 
 This library provides us following features:
 
-- **Akka Cluster** — This feature contains two Akka Cluster Membership operations called `join` and `leave` and also it has some methods to retrieve _Cluster State_ and _Cluster Events_.
+- **Pekko Cluster** — This feature contains two Pekko Cluster Membership operations called `join` and `leave` and also it has some methods to retrieve _Cluster State_ and _Cluster Events_.
 
-- **Akka Distributed PubSub** — Akka has a _Distributed Publish Subscribe_ facility in the cluster. It helps us to send a message to all actors in the cluster that have registered and subscribed for a specific topic name without knowing their physical address or without knowing which node they are running on.
+- **Pekko Distributed PubSub** — Pekko has a _Distributed Publish Subscribe_ facility in the cluster. It helps us to send a message to all actors in the cluster that have registered and subscribed for a specific topic name without knowing their physical address or without knowing which node they are running on.
 
-- **Akka Cluster Sharding** — Cluster sharding is useful when we need to _distribute actors across several nodes in the cluster_ and want to be able to interact with them using their logical identifier without having to care about their physical location in the cluster, which might also change over time. When we have many stateful entities in our application that together they consume more resources (e.g. memory) than fit on one machine, it is useful to use _Akka Cluster Sharding_ to distribute our entities to multiple nodes.
+- **Pekko Cluster Sharding** — Cluster sharding is useful when we need to _distribute actors across several nodes in the cluster_ and want to be able to interact with them using their logical identifier without having to care about their physical location in the cluster, which might also change over time. When we have many stateful entities in our application that together they consume more resources (e.g. memory) than fit on one machine, it is useful to use _Pekko Cluster Sharding_ to distribute our entities to multiple nodes.
 
 ## Installation
 
 In order to use this library, we need to add the following line in our `build.sbt` file:
 
 ```scala
-libraryDependencies += "dev.zio" %% "zio-akka-cluster" % "0.3.0"
+libraryDependencies += "nl.gn0s1s" %% "zio-pekko-cluster" % "<version>"
 ```
 
 ## Example
 
-In the following example, we are using all these three features. We have a distributed counter application that lives in the Akka Cluster using _Akka Cluster Sharding_ feature. So the location of `LiveUsers` and `TotalRequests` entities in the cluster is transparent for us. We send the result of each entity to the _Distributed PubSub_. So every node in the cluster can subscribe and listen to those results. Also, we have created a fiber that is subscribed to the cluster events. All the new events will be logged to the console:
+In the following example, we are using all these three features. We have a distributed counter application that lives in the Pkeko Cluster using _Pekko Cluster Sharding_ feature. So the location of `LiveUsers` and `TotalRequests` entities in the cluster is transparent for us. We send the result of each entity to the _Distributed PubSub_. So every node in the cluster can subscribe and listen to those results. Also, we have created a fiber that is subscribed to the cluster events. All the new events will be logged to the console:
 
 ```scala
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio._
-import zio.akka.cluster.Cluster
-import zio.akka.cluster.sharding.{ Entity, Sharding }
+import zio.pekko.cluster.Cluster
+import zio.pekko.cluster.sharding.{ Entity, Sharding }
 
 sealed trait Counter extends Product with Serializable
 case object Inc      extends Counter
@@ -44,18 +42,20 @@ case object Dec      extends Counter
 case class CounterApp(port: String) {
   val config: Config =
     ConfigFactory.parseString(s"""
-                                 |akka {
+                                 |pekko {
                                  |  actor {
                                  |    provider = "cluster"
                                  |  }
                                  |  remote {
-                                 |    netty.tcp {
+                                 |    enabled-transports = ["pekko.remote.artery.canonical"]
+                                 |    artery.canonical {
                                  |      hostname = "127.0.0.1"
                                  |      port = $port
                                  |    }
                                  |  }
                                  |  cluster {
-                                 |    seed-nodes = ["akka.tcp://CounterApp@127.0.0.1:2551"]
+                                 |    seed-nodes = ["pekko.tcp://CounterApp@127.0.0.1:$port"]
+                                 |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                  |  }
                                  |}
                                  |""".stripMargin)
@@ -70,7 +70,7 @@ case class CounterApp(port: String) {
   val counterApp: ZIO[Scope, Throwable, Unit] =
     (for {
       queue              <- Cluster.clusterEvents(true)
-      pubsub             <- zio.akka.cluster.pubsub.PubSub.createPubSub[Int]
+      pubsub             <- zio.pekko.cluster.pubsub.PubSub.createPubSub[Int]
       liveUsersLogger    <- pubsub
         .listen("LiveUsers")
         .flatMap(
@@ -129,7 +129,7 @@ object CounterApp2 extends ZIOAppDefault {
 
 ## Documentation
 
-Learn more on the [ZIO Akka Cluster homepage](https://zio.dev/zio-akka-cluster)!
+Learn more on the [ZIO Pekko Cluster homepage](https://github.com/philippus/zio-pekko-cluster)!
 
 ## Contributing
 
@@ -138,13 +138,6 @@ For the general guidelines, see ZIO [contributor's guide](https://zio.dev/about/
 ## Code of Conduct
 
 See the [Code of Conduct](https://zio.dev/about/code-of-conduct)
-
-## Support
-
-Come chat with us on [![Badge-Discord]][Link-Discord].
-
-[Badge-Discord]: https://img.shields.io/discord/629491597070827530?logo=discord "chat on discord"
-[Link-Discord]: https://discord.gg/2ccFBr4 "Discord"
 
 ## License
 
