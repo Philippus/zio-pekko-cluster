@@ -4,7 +4,7 @@
 
 # ZIO Pekko Cluster
 
-The [ZIO Pekko Cluster](https://github.com/philippus/zio-pekko-cluster) library is a ZIO wrapper on [Pekko Cluster](https://pekko.apache.org/docs/pekko/current/index-cluster.html). We can use clustering features of the Pekko toolkit without the need to use the actor model.
+The [ZIO Pekko Cluster](https://github.com/philippus/zio-pekko-cluster) library is a ZIO wrapper on [Pekko Cluster](https://pekko.apache.org/docs/pekko/current/index-cluster.html). It is a fork of [ZIO Akka Cluster](https://github.com/zio/zio-akka-cluster) providing the same functionality for Apache Pekko. We can use clustering features of the Pekko toolkit without the need to use the actor model.
 
 ## Introduction
 
