@@ -1,30 +1,26 @@
 import sbt.Project.projectToLocalProject
 
-val mainScala = "2.13.7"
-val allScala  = Seq("2.12.15", mainScala)
+val mainScala = "2.13.12"
+val allScala  = Seq("2.12.18", mainScala)
 
 val zioVersion   = "2.0.18"
 val pekkoVersion = "1.0.1"
 
 inThisBuild(
   List(
-    organization             := "dev.zio",
+    organization             := "nl.gn0s1s",
+    startYear                := Some(2023),
     homepage                 := Some(url("https://github.com/philippus/zio-pekko-cluster")),
     licenses                 := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     scalaVersion             := mainScala,
     Test / parallelExecution := false,
     Test / fork              := true,
-    pgpPublicRing            := file("/tmp/public.asc"),
-    pgpSecretRing            := file("/tmp/secret.asc"),
-    scmInfo                  := Some(
-      ScmInfo(url("https://github.com/zio/zio-pekko-cluster/"), "scm:git:git@github.com:philippus/zio-pekko-cluster.git")
-    ),
     developers               := List(
       Developer(
-        "ghostdogpr",
-        "Pierre Ricadat",
-        "ghostdogpr@gmail.com",
-        url("https://github.com/ghostdogpr")
+        "philippus",
+        "Philippus Baalman",
+        "",
+        url("https://github.com/philippus")
       )
     ),
     scalacOptions ++= Seq(
