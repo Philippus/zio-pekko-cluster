@@ -78,8 +78,7 @@ lazy val `zio-pekko-cluster` = project
       "dev.zio"          %% "zio-test-sbt"           % zioVersion % "test",
       compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.2" cross CrossVersion.full),
       compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
-    ),
-    testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
+    )
   )
 
 run / fork := true
