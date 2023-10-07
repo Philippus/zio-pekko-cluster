@@ -35,12 +35,12 @@ object SubscriberImpl {
 
     def receive: Actor.Receive = {
       case SubscribeAck(_)      =>
-        Unsafe.unsafeCompat { implicit u =>
+        Unsafe.unsafe { implicit u =>
           rts.unsafe.run(subscribed.succeed(())).getOrThrow()
         }
         ()
       case MessageEnvelope(msg) =>
-        Unsafe.unsafeCompat { implicit u =>
+        Unsafe.unsafe { implicit u =>
           val fiber = rts.unsafe.fork(queue.offer(msg.asInstanceOf[A]))
           fiber.unsafe.addObserver {
             case Exit.Success(_) => ()

@@ -142,7 +142,7 @@ object Sharding {
   ) extends Actor {
 
     val ref: Ref[Option[State]]                     =
-      Unsafe.unsafeCompat { implicit u =>
+      Unsafe.unsafe { implicit u =>
         rts.unsafe.run(Ref.make[Option[State]](None)).getOrThrow()
       }
     val actorContext: ActorContext                  = context
@@ -165,7 +165,7 @@ object Sharding {
       case p: Passivate         =>
         actorContext.parent ! p
       case MessagePayload(msg)  =>
-        Unsafe.unsafeCompat { implicit u =>
+        Unsafe.unsafe { implicit u =>
           rts.unsafe.run(onMessage(msg.asInstanceOf[Msg]).provideSomeLayer[R](entity)).getOrThrow()
         }
         ()

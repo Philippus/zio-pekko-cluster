@@ -71,7 +71,7 @@ object Cluster {
 
     def receive: Actor.Receive = {
       case ev: ClusterDomainEvent =>
-        Unsafe.unsafeCompat { implicit u =>
+        Unsafe.unsafe { implicit u =>
           val fiber = rts.unsafe.fork(queue.offer(ev))
           fiber.unsafe.addObserver {
             case Exit.Success(_) => ()
