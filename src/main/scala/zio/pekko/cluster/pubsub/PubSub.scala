@@ -4,7 +4,6 @@ import org.apache.pekko.actor.{ActorRef, ActorSystem}
 import org.apache.pekko.cluster.pubsub.DistributedPubSub
 
 import zio.pekko.cluster.pubsub.impl.{PublisherImpl, SubscriberImpl}
-import zio.pekko.cluster.pubsub.impl.{PublisherImpl, SubscriberImpl}
 import zio.{Has, Queue, Task, ZIO}
 
 /** A `Publisher[A]` is able to send messages of type `A` through Akka PubSub.
