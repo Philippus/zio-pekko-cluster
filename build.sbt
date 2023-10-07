@@ -9,7 +9,7 @@ val pekkoVersion = "1.0.1"
 inThisBuild(
   List(
     organization             := "dev.zio",
-    homepage                 := Some(url("https://zio.dev/zio-akka-cluster")),
+    homepage                 := Some(url("https://github.com/philippus/zio-pekko-cluster")),
     licenses                 := List("Apache-2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
     scalaVersion             := mainScala,
     Test / parallelExecution := false,
@@ -17,7 +17,7 @@ inThisBuild(
     pgpPublicRing            := file("/tmp/public.asc"),
     pgpSecretRing            := file("/tmp/secret.asc"),
     scmInfo                  := Some(
-      ScmInfo(url("https://github.com/zio/zio-akka-cluster/"), "scm:git:git@github.com:zio/zio-akka-cluster.git")
+      ScmInfo(url("https://github.com/zio/zio-pekko-cluster/"), "scm:git:git@github.com:philippus/zio-pekko-cluster.git")
     ),
     developers               := List(
       Developer(
@@ -89,11 +89,11 @@ addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
 
 lazy val docs = project
-  .in(file("zio-akka-cluster-docs"))
+  .in(file("zio-pekko-cluster-docs"))
   .settings(
     publish / skip                             := true,
-    moduleName                                 := "zio-akka-cluster-docs",
-    projectName                                := "ZIO Akka Cluster",
+    moduleName                                 := "zio-pekko-cluster-docs",
+    projectName                                := "ZIO Pekko Cluster",
     mainModuleName                             := (`zio-pekko-cluster` / moduleName).value,
     projectStage                               := ProjectStage.ProductionReady,
     ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(`zio-pekko-cluster`),
