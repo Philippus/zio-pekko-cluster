@@ -1,8 +1,8 @@
-package zio.akka.cluster.pubsub.impl
+package zio.pekko.cluster.pubsub.impl
 
-import akka.actor.ActorRef
-import akka.cluster.pubsub.DistributedPubSubMediator.Publish
-import zio.akka.cluster.pubsub.{ MessageEnvelope, Publisher }
+import org.apache.pekko.actor.ActorRef
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.Publish
+import zio.pekko.cluster.pubsub.{MessageEnvelope, Publisher}
 import zio.{ Task, ZIO }
 
 private[pubsub] trait PublisherImpl[A] extends Publisher[A] {

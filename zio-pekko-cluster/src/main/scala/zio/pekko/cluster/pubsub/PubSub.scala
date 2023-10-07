@@ -1,19 +1,19 @@
-package zio.akka.cluster.pubsub
+package zio.pekko.cluster.pubsub
 
-import akka.actor.{ ActorRef, ActorSystem }
-import akka.cluster.pubsub.DistributedPubSub
-import zio.akka.cluster.pubsub.impl.{ PublisherImpl, SubscriberImpl }
-import zio.{ Queue, Task, ZIO }
+import org.apache.pekko.actor.{ActorRef, ActorSystem}
+import org.apache.pekko.cluster.pubsub.DistributedPubSub
+import zio.pekko.cluster.pubsub.impl.{PublisherImpl, SubscriberImpl}
+import zio.{Queue, Task, ZIO}
 
 /**
- *  A `Publisher[A]` is able to send messages of type `A` through Akka PubSub.
+ *  A `Publisher[A]` is able to send messages of type `A` through Pekko PubSub.
  */
 trait Publisher[A] {
   def publish(topic: String, data: A, sendOneMessageToEachGroup: Boolean = false): Task[Unit]
 }
 
 /**
- *  A `Subscriber[A]` is able to receive messages of type `A` through Akka PubSub.
+ *  A `Subscriber[A]` is able to receive messages of type `A` through Pekko PubSub.
  */
 trait Subscriber[A] {
 
@@ -24,7 +24,7 @@ trait Subscriber[A] {
 }
 
 /**
- *  A `PubSub[A]` is able to both send and receive messages of type `A` through Akka PubSub.
+ *  A `PubSub[A]` is able to both send and receive messages of type `A` through Pekko PubSub.
  */
 trait PubSub[A] extends Publisher[A] with Subscriber[A]
 

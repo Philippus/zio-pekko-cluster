@@ -1,15 +1,15 @@
-package zio.akka.cluster
+package zio.pekko.cluster
 
-import akka.actor.{ Actor, ActorSystem, Address, PoisonPill, Props }
-import akka.cluster.ClusterEvent._
+import org.apache.pekko.actor.{ Actor, ActorSystem, Address, PoisonPill, Props }
+import org.apache.pekko.cluster.ClusterEvent._
 import zio.{ Exit, Queue, Runtime, Unsafe, ZIO }
 
 object Cluster {
 
-  private val cluster: ZIO[ActorSystem, Throwable, akka.cluster.Cluster] =
+  private val cluster: ZIO[ActorSystem, Throwable, org.apache.pekko.cluster.Cluster] =
     for {
       actorSystem <- ZIO.service[ActorSystem]
-      cluster     <- ZIO.attempt(akka.cluster.Cluster(actorSystem))
+      cluster     <- ZIO.attempt(org.apache.pekko.cluster.Cluster(actorSystem))
     } yield cluster
 
   /**
@@ -73,7 +73,7 @@ object Cluster {
 
     val initialState: SubscriptionInitialStateMode =
       if (initialStateAsEvents) InitialStateAsEvents else InitialStateAsSnapshot
-    akka.cluster.Cluster(context.system).subscribe(self, initialState, classOf[ClusterDomainEvent])
+    org.apache.pekko.cluster.Cluster(context.system).subscribe(self, initialState, classOf[ClusterDomainEvent])
 
     def receive: Actor.Receive = {
       case ev: ClusterDomainEvent =>

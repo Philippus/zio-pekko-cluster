@@ -3,8 +3,8 @@ import sbt.Project.projectToLocalProject
 val mainScala = "2.13.7"
 val allScala  = Seq("2.12.15", mainScala)
 
-val zioVersion  = "2.0.0"
-val akkaVersion = "2.6.19"
+val zioVersion   = "2.0.0"
+val pekkoVersion = "1.0.0"
 
 inThisBuild(
   List(
@@ -63,19 +63,19 @@ inThisBuild(
 )
 
 lazy val root =
-  project.in(file(".")).aggregate(`zio-akka-cluster`, docs)
+  project.in(file(".")).aggregate(`zio-pekko-cluster`, docs)
 
-lazy val `zio-akka-cluster` = project
-  .in(file("zio-akka-cluster"))
+lazy val `zio-pekko-cluster` = project
+  .in(file("zio-pekko-cluster"))
   .settings(
-    name := "zio-akka-cluster",
+    name := "zio-pekko-cluster",
     libraryDependencies ++= Seq(
-      "dev.zio"           %% "zio"                   % zioVersion,
-      "dev.zio"           %% "zio-streams"           % zioVersion,
-      "com.typesafe.akka" %% "akka-cluster-tools"    % akkaVersion,
-      "com.typesafe.akka" %% "akka-cluster-sharding" % akkaVersion,
-      "dev.zio"           %% "zio-test"              % zioVersion % "test",
-      "dev.zio"           %% "zio-test-sbt"          % zioVersion % "test",
+      "dev.zio"           %% "zio"                    % zioVersion,
+      "dev.zio"           %% "zio-streams"            % zioVersion,
+      "org.apache.pekko"  %% "pekko-cluster-tools"    % pekkoVersion,
+      "org.apache.pekko"  %% "pekko-cluster-sharding" % pekkoVersion,
+      "dev.zio"           %% "zio-test"               % zioVersion % "test",
+      "dev.zio"           %% "zio-test-sbt"           % zioVersion % "test",
       compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.2" cross CrossVersion.full),
       compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
     ),
@@ -95,10 +95,10 @@ lazy val docs = project
     publish / skip := true,
     moduleName := "zio-akka-cluster-docs",
     projectName := "ZIO Akka Cluster",
-    mainModuleName := (`zio-akka-cluster` / moduleName).value,
+    mainModuleName := (`zio-pekko-cluster` / moduleName).value,
     projectStage := ProjectStage.ProductionReady,
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(`zio-akka-cluster`),
+    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(`zio-pekko-cluster`),
     docsPublishBranch := "series/2.x"
   )
   .enablePlugins(WebsitePlugin)
-  .dependsOn(`zio-akka-cluster`)
+  .dependsOn(`zio-pekko-cluster`)

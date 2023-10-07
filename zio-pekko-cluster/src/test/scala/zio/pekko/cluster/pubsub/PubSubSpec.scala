@@ -1,6 +1,6 @@
-package zio.akka.cluster.pubsub
+package zio.pekko.cluster.pubsub
 
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.test.Assertion._
 import zio.test._
@@ -11,20 +11,20 @@ import zio.{ ExecutionStrategy, ZIO, ZLayer }
 object PubSubSpec extends ZIOSpecDefault {
 
   val config: Config = ConfigFactory.parseString(s"""
-                                                    |akka {
+                                                    |pekko {
                                                     |  actor {
                                                     |    provider = "cluster"
                                                     |  }
                                                     |  remote {
-                                                    |    enabled-transports = ["akka.remote.artery.canonical"]
+                                                    |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                     |    artery.canonical {
                                                     |      hostname = "127.0.0.1"
                                                     |      port = 2553
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["akka://Test@127.0.0.1:2553"]
-                                                    |    downing-provider-class = "akka.cluster.sbr.SplitBrainResolverProvider"
+                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:2553"]
+                                                    |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                     |  }
                                                     |}
            """.stripMargin)

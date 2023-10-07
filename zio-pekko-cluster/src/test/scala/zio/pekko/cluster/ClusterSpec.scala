@@ -1,9 +1,9 @@
-package zio.akka.cluster
+package zio.pekko.cluster
 
 import scala.language.postfixOps
 
-import akka.actor.ActorSystem
-import akka.cluster.ClusterEvent.MemberLeft
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.cluster.ClusterEvent.MemberLeft
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.stream.ZStream
 import zio.test.Assertion._
@@ -18,20 +18,20 @@ object ClusterSpec extends ZIOSpecDefault {
     suite("ClusterSpec")(
       test("receive cluster events") {
         val config: Config = ConfigFactory.parseString(s"""
-                                                          |akka {
+                                                          |pekko {
                                                           |  actor {
                                                           |    provider = "cluster"
                                                           |  }
                                                           |  remote {
-                                                          |    enabled-transports = ["akka.remote.artery.canonical"]
+                                                          |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                           |    artery.canonical {
                                                           |      hostname = "127.0.0.1"
                                                           |      port = 2554
                                                           |    }
                                                           |  }
                                                           |  cluster {
-                                                          |    seed-nodes = ["akka://Test@127.0.0.1:2554"]
-                                                          |    downing-provider-class = "akka.cluster.sbr.SplitBrainResolverProvider"
+                                                          |    seed-nodes = ["pekko://Test@127.0.0.1:2554"]
+                                                          |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                           |  }
                                                           |}
                   """.stripMargin)

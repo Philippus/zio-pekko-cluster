@@ -1,6 +1,6 @@
-package zio.akka.cluster
+package zio.pekko.cluster
 
-import akka.actor.ActorContext
+import org.apache.pekko.actor.ActorContext
 import zio.{ Ref, Tag, Task, UIO, URIO, ZIO }
 
 import scala.concurrent.duration.Duration

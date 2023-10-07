@@ -1,15 +1,16 @@
-package zio.akka.cluster.sharding
+package zio.pekko.cluster.sharding
 
 import scala.concurrent.duration._
 import scala.reflect.ClassTag
-import akka.actor.{ Actor, ActorContext, ActorRef, ActorSystem, PoisonPill, Props, ReceiveTimeout }
-import akka.cluster.sharding.ShardRegion.Passivate
-import akka.cluster.sharding.{ ClusterSharding, ClusterShardingSettings }
-import akka.pattern.{ ask => askPattern }
-import akka.util.Timeout
-import zio.akka.cluster.sharding
-import zio.akka.cluster.sharding.MessageEnvelope.{ MessagePayload, PassivatePayload, PoisonPillPayload }
-import zio.{ =!=, Ref, Runtime, Tag, Task, UIO, Unsafe, ZIO, ZLayer }
+
+import org.apache.pekko.actor.{Actor, ActorContext, ActorRef, ActorSystem, PoisonPill, Props, ReceiveTimeout}
+import org.apache.pekko.cluster.sharding.ShardRegion.Passivate
+import org.apache.pekko.cluster.sharding.{ClusterSharding, ClusterShardingSettings}
+import org.apache.pekko.pattern.{ask => askPattern}
+import org.apache.pekko.util.Timeout
+import zio.pekko.cluster.sharding
+import zio.pekko.cluster.sharding.MessageEnvelope.{MessagePayload, PassivatePayload, PoisonPillPayload}
+import zio.{=!=, Ref, Runtime, Tag, Task, UIO, Unsafe, ZIO, ZLayer}
 
 /**
  *  A `Sharding[M]` is able to send messages of type `M` to a sharded entity or to stop one.

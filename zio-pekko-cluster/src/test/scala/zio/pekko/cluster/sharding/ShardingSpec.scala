@@ -1,7 +1,7 @@
-package zio.akka.cluster.sharding
+package zio.pekko.cluster.sharding
 
 import scala.language.postfixOps
-import akka.actor.ActorSystem
+import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{ Config, ConfigFactory }
 import zio.test.Assertion._
 import zio.test._
@@ -13,21 +13,21 @@ import zio._
 object ShardingSpec extends ZIOSpecDefault {
 
   val config: Config = ConfigFactory.parseString(s"""
-                                                    |akka {
+                                                    |pekko {
                                                     |  actor {
                                                     |    provider = "cluster"
                                                     |  }
                                                     |  remote {
-                                                    |    enabled-transports = ["akka.remote.artery.canonical"]
+                                                    |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                     |    artery.canonical {
                                                     |      hostname = "127.0.0.1"
                                                     |      port = 2551
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["akka://Test@127.0.0.1:2551"]
+                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:2551"]
                                                     |    jmx.multi-mbeans-in-same-jvm = on
-                                                    |    downing-provider-class = "akka.cluster.sbr.SplitBrainResolverProvider"
+                                                    |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                     |  }
                                                     |}
       """.stripMargin)
@@ -39,21 +39,21 @@ object ShardingSpec extends ZIOSpecDefault {
       )
 
   val config2: Config = ConfigFactory.parseString(s"""
-                                                     |akka {
+                                                     |pekko {
                                                      |  actor {
                                                      |    provider = "cluster"
                                                      |  }
                                                      |  remote {
-                                                     |    enabled-transports = ["akka.remote.artery.canonical"]
+                                                     |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                      |    artery.canonical {
                                                      |      hostname = "127.0.0.1"
                                                      |      port = 2552
                                                      |    }
                                                      |  }
                                                      |  cluster {
-                                                     |    seed-nodes = ["akka://Test@127.0.0.1:2552"]
+                                                     |    seed-nodes = ["pekko://Test@127.0.0.1:2552"]
                                                      |    jmx.multi-mbeans-in-same-jvm = on
-                                                     |    downing-provider-class = "akka.cluster.sbr.SplitBrainResolverProvider"
+                                                     |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                      |  }
                                                      |}
       """.stripMargin)

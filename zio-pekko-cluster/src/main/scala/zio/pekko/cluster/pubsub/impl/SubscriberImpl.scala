@@ -1,10 +1,10 @@
-package zio.akka.cluster.pubsub.impl
+package zio.pekko.cluster.pubsub.impl
 
-import akka.actor.{ Actor, ActorRef, ActorSystem, PoisonPill, Props }
-import akka.cluster.pubsub.DistributedPubSubMediator.{ Subscribe, SubscribeAck }
-import zio.akka.cluster.pubsub.impl.SubscriberImpl.SubscriberActor
-import zio.akka.cluster.pubsub.{ MessageEnvelope, Subscriber }
-import zio.{ Exit, Promise, Queue, Runtime, Task, Unsafe, ZIO }
+import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, PoisonPill, Props}
+import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{Subscribe, SubscribeAck}
+import SubscriberImpl.SubscriberActor
+import zio.pekko.cluster.pubsub.{MessageEnvelope, Subscriber}
+import zio.{Exit, Promise, Queue, Runtime, Task, Unsafe, ZIO}
 
 private[pubsub] trait SubscriberImpl[A] extends Subscriber[A] {
   val getActorSystem: ActorSystem
