@@ -26,11 +26,11 @@ object ClusterSpec extends ZIOSpecDefault {
                                                           |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                           |    artery.canonical {
                                                           |      hostname = "127.0.0.1"
-                                                          |      port = 2554
+                                                          |      port = 17358
                                                           |    }
                                                           |  }
                                                           |  cluster {
-                                                          |    seed-nodes = ["pekko://Test@127.0.0.1:2554"]
+                                                          |    seed-nodes = ["pekko://Test@127.0.0.1:17358"]
                                                           |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                           |  }
                                                           |}

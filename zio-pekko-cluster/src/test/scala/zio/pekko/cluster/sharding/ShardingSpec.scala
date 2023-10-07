@@ -21,11 +21,11 @@ object ShardingSpec extends ZIOSpecDefault {
                                                     |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                     |    artery.canonical {
                                                     |      hostname = "127.0.0.1"
-                                                    |      port = 2551
+                                                    |      port = 17355
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:2551"]
+                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:17355"]
                                                     |    jmx.multi-mbeans-in-same-jvm = on
                                                     |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                     |  }
@@ -47,11 +47,11 @@ object ShardingSpec extends ZIOSpecDefault {
                                                      |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                      |    artery.canonical {
                                                      |      hostname = "127.0.0.1"
-                                                     |      port = 2552
+                                                     |      port = 17356
                                                      |    }
                                                      |  }
                                                      |  cluster {
-                                                     |    seed-nodes = ["pekko://Test@127.0.0.1:2552"]
+                                                     |    seed-nodes = ["pekko://Test@127.0.0.1:17356"]
                                                      |    jmx.multi-mbeans-in-same-jvm = on
                                                      |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                      |  }

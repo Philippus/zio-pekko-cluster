@@ -19,11 +19,11 @@ object PubSubSpec extends ZIOSpecDefault {
                                                     |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                     |    artery.canonical {
                                                     |      hostname = "127.0.0.1"
-                                                    |      port = 2553
+                                                    |      port = 17357
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:2553"]
+                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:17357"]
                                                     |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                     |  }
                                                     |}
