@@ -6,13 +6,13 @@ import org.apache.pekko.cluster.pubsub.DistributedPubSub
 import zio.pekko.cluster.pubsub.impl.{PublisherImpl, SubscriberImpl}
 import zio.{Has, Queue, Task, ZIO}
 
-/** A `Publisher[A]` is able to send messages of type `A` through Akka PubSub.
+/** A `Publisher[A]` is able to send messages of type `A` through Pekko PubSub.
   */
 trait Publisher[A] {
   def publish(topic: String, data: A, sendOneMessageToEachGroup: Boolean = false): Task[Unit]
 }
 
-/** A `Subscriber[A]` is able to receive messages of type `A` through Akka PubSub.
+/** A `Subscriber[A]` is able to receive messages of type `A` through Pekko PubSub.
   */
 trait Subscriber[A] {
 
@@ -22,7 +22,7 @@ trait Subscriber[A] {
   def listenWith(topic: String, queue: Queue[A], group: Option[String] = None): Task[Unit]
 }
 
-/** A `PubSub[A]` is able to both send and receive messages of type `A` through Akka PubSub.
+/** A `PubSub[A]` is able to both send and receive messages of type `A` through Pekko PubSub.
   */
 trait PubSub[A] extends Publisher[A] with Subscriber[A]
 
