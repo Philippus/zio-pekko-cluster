@@ -1,5 +1,9 @@
 # ZIO Pekko Cluster
 
+[![build](https://github.com/Philippus/zio-pekko-cluster/workflows/build/badge.svg)](https://github.com/Philippus/zio-pekko-cluster/actions/workflows/scala.yml?query=workflow%3Abuild+branch%3Aseries1.x)
+![Current Version](https://img.shields.io/badge/version-0.1.0-brightgreen.svg?style=flat "0.1.0")
+[![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat "Apache 2.0")](LICENSE)
+
 This library is a [ZIO](https://github.com/zio/zio) wrapper for [Pekko Cluster](https://pekko.apache.org/docs/pekko/current/index-cluster.html).
 It is a fork of [ZIO Akka Cluster](https://github.com/zio/zio-akka-cluster) providing the same functionality for Apache Pekko.
 It exposes a purely functional API allowing you to leverage the distributed features of Pekko without the need to use the actor model.
@@ -14,7 +18,7 @@ The following features are available:
 To use `zio-pekko-cluster`, add the following line in your `build.sbt` file:
 
 ```
-libraryDependencies += "nl.gn0s1s" %% "zio-pekko-cluster" % "0.2.0"
+libraryDependencies += "nl.gn0s1s" %% "zio-pekko-cluster" % "0.1.0"
 ```
 
 ## How to use
