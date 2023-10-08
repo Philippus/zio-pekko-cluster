@@ -13,9 +13,8 @@ developers := List(
   )
 )
 
-crossScalaVersions := List("2.12.18", "2.13.12")
+crossScalaVersions := List("2.13.12")
 scalaVersion       := crossScalaVersions.value.last
-
 
 Test / parallelExecution := false
 Test / fork := true
@@ -49,21 +48,4 @@ scalacOptions ++= Seq(
   "-Ywarn-numeric-widen",
   "-Ywarn-unused",
   "-Ywarn-value-discard"
-) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-  case Some((2, 12)) =>
-    Seq(
-      "-Xsource:2.13",
-      "-Yno-adapted-args",
-      "-Ypartial-unification",
-      "-Ywarn-extra-implicit",
-      "-Ywarn-inaccessible",
-      "-Ywarn-infer-any",
-      "-Ywarn-nullary-override",
-      "-Ywarn-nullary-unit",
-      "-opt-inline-from:<source>",
-      "-opt-warnings",
-      "-opt:l:inline",
-      "-Xfuture"
-    )
-  case _             => Nil
-})
+)
