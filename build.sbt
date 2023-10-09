@@ -1,7 +1,7 @@
 import sbt.Project.projectToLocalProject
 
 val mainScala = "2.13.12"
-val allScala  = Seq("2.12.18", mainScala)
+val allScala  = Seq(mainScala)
 
 val zioVersion   = "2.0.18"
 val pekkoVersion = "1.0.1"
@@ -37,24 +37,7 @@ inThisBuild(
       "-Ywarn-numeric-widen",
       "-Ywarn-unused",
       "-Ywarn-value-discard"
-    ) ++ (CrossVersion.partialVersion(scalaVersion.value) match {
-      case Some((2, 12)) =>
-        Seq(
-          "-Xsource:2.13",
-          "-Yno-adapted-args",
-          "-Ypartial-unification",
-          "-Ywarn-extra-implicit",
-          "-Ywarn-inaccessible",
-          "-Ywarn-infer-any",
-          "-Ywarn-nullary-override",
-          "-Ywarn-nullary-unit",
-          "-opt-inline-from:<source>",
-          "-opt-warnings",
-          "-opt:l:inline",
-          "-Xfuture"
-        )
-      case _             => Nil
-    })
+    )
   )
 )
 
