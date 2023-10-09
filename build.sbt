@@ -42,12 +42,17 @@ inThisBuild(
 )
 
 lazy val root =
-  project.in(file(".")).aggregate(`zio-pekko-cluster`, docs)
+  project.in(file("."))
+    .aggregate(`zio-pekko-cluster`, docs)
+    .settings(
+      publish / skip := true
+    )
 
 lazy val `zio-pekko-cluster` = project
   .in(file("zio-pekko-cluster"))
   .settings(
-    name := "zio-pekko-cluster",
+    name           := "zio-pekko-cluster",
+    publish / skip := false,
     libraryDependencies ++= Seq(
       "dev.zio"          %% "zio"                    % zioVersion,
       "dev.zio"          %% "zio-streams"            % zioVersion,
