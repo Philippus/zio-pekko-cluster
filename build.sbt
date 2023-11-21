@@ -17,8 +17,8 @@ crossScalaVersions := List("2.13.12")
 scalaVersion       := crossScalaVersions.value.last
 
 Test / parallelExecution := false
-Test / fork := true
-run / fork := true
+Test / fork              := true
+run / fork               := true
 
 val zioVersion = "1.0.18"
 
