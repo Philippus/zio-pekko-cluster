@@ -4,7 +4,7 @@
 
 # ZIO Pekko Cluster
 
-[![build](https://github.com/Philippus/zio-pekko-cluster/workflows/build/badge.svg)](https://github.com/Philippus/zio-pekko-cluster/actions/workflows/scala.yml?query=workflow%3Abuild+branch%3Aseries2.x)
+[![build](https://github.com/Philippus/zio-pekko-cluster/workflows/build/badge.svg)](https://github.com/Philippus/zio-pekko-cluster/actions/workflows/ci.yml?query=workflow%3Abuild+branch%3Aseries%2F2.x)
 ![Current Version](https://img.shields.io/badge/version-0.2.0-brightgreen.svg?style=flat "0.2.0")
 [![license](https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat "Apache 2.0")](LICENSE)
 
