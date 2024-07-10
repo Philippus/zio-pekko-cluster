@@ -3,7 +3,7 @@ import sbt.Project.projectToLocalProject
 val mainScala = "2.13.14"
 val allScala  = Seq(mainScala)
 
-val zioVersion   = "2.1.5"
+val zioVersion   = "2.1.6"
 val pekkoVersion = "1.0.3"
 
 inThisBuild(
