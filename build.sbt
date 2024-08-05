@@ -20,7 +20,7 @@ Test / parallelExecution := false
 Test / fork              := true
 run / fork               := true
 
-val zioVersion = "1.0.18"
+val zioVersion = "2.1.7"
 
 libraryDependencies ++= Seq(
   "dev.zio"          %% "zio"                    % zioVersion,
