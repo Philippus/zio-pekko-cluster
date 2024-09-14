@@ -4,7 +4,7 @@ val mainScala = "2.13.14"
 val allScala  = Seq(mainScala)
 
 val zioVersion   = "2.1.9"
-val pekkoVersion = "1.1.0"
+val pekkoVersion = "1.1.1"
 
 inThisBuild(
   List(
