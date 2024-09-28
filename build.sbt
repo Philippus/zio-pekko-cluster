@@ -13,7 +13,7 @@ developers := List(
   )
 )
 
-crossScalaVersions := List("2.13.14")
+crossScalaVersions := List("2.13.15")
 scalaVersion       := crossScalaVersions.value.last
 
 Test / parallelExecution := false
