@@ -130,8 +130,8 @@ object ShardingSpec extends DefaultRunnableSpec {
                           .provideLayer(
                             Clock.live
                           ) // give time to the ShardCoordinator to notice the death of the actor and recreate one
-            _   <- sharding.send(shardId, "get")
-            res <- p.await
+            _        <- sharding.send(shardId, "get")
+            res      <- p.await
           } yield res
         )(isNone).provideLayer(actorSystem)
       },
@@ -151,8 +151,8 @@ object ShardingSpec extends DefaultRunnableSpec {
                           .provideLayer(
                             Clock.live
                           ) // give time to the ShardCoordinator to notice the death of the actor and recreate one
-            _   <- sharding.send(shardId, "get")
-            res <- p.await
+            _        <- sharding.send(shardId, "get")
+            res      <- p.await
           } yield res
         )(isNone).provideLayer(actorSystem)
       },
@@ -173,8 +173,8 @@ object ShardingSpec extends DefaultRunnableSpec {
                           .provideLayer(
                             Clock.live
                           ) // give time to the ShardCoordinator to notice the death of the actor and recreate one
-            _   <- sharding.send(shardId, "get")
-            res <- p.await
+            _        <- sharding.send(shardId, "get")
+            res      <- p.await
           } yield res
         )(isNone).provideLayer(actorSystem)
       },
