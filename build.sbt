@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
   "org.apache.pekko" %% "pekko-cluster-sharding" % "1.4.0",
   "dev.zio"          %% "zio-test"               % zioVersion     % "test",
   "dev.zio"          %% "zio-test-sbt"           % zioVersion     % "test",
-  "io.netty"          % "netty-transport"        % "4.2.10.Final" % "test",
+  "io.netty"          % "netty-transport"        % "4.2.12.Final" % "test",
   compilerPlugin("org.typelevel" %% "kind-projector"     % "0.13.4" cross CrossVersion.full),
   compilerPlugin("com.olegpy"    %% "better-monadic-for" % "0.3.1")
 )
