@@ -25,8 +25,8 @@ val zioVersion = "1.0.18"
 libraryDependencies ++= Seq(
   "dev.zio"          %% "zio"                    % zioVersion,
   "dev.zio"          %% "zio-streams"            % zioVersion,
-  "org.apache.pekko" %% "pekko-cluster-tools"    % "1.5.0",
-  "org.apache.pekko" %% "pekko-cluster-sharding" % "1.5.0",
+  "org.apache.pekko" %% "pekko-cluster-tools"    % "1.6.0",
+  "org.apache.pekko" %% "pekko-cluster-sharding" % "1.6.0",
   "dev.zio"          %% "zio-test"               % zioVersion     % "test",
   "dev.zio"          %% "zio-test-sbt"           % zioVersion     % "test",
   "io.netty"          % "netty-transport"        % "4.2.12.Final" % "test",
