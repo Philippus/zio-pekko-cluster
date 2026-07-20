@@ -1,5 +1,3 @@
-import sbt.Project.projectToLocalProject
-
 val mainScala = "2.13.18"
 val allScala  = Seq(mainScala)
 
@@ -43,7 +41,7 @@ inThisBuild(
 
 lazy val root =
   project.in(file("."))
-    .aggregate(`zio-pekko-cluster`, docs)
+    .aggregate(`zio-pekko-cluster`)
     .settings(
       publish / skip := true
     )
@@ -71,17 +69,3 @@ crossScalaVersions := allScala
 
 addCommandAlias("fmt", "all scalafmtSbt scalafmt test:scalafmt")
 addCommandAlias("check", "all scalafmtSbtCheck scalafmtCheck test:scalafmtCheck")
-
-lazy val docs = project
-  .in(file("zio-pekko-cluster-docs"))
-  .settings(
-    publish / skip                             := true,
-    moduleName                                 := "zio-pekko-cluster-docs",
-    projectName                                := "ZIO Pekko Cluster",
-    mainModuleName                             := (`zio-pekko-cluster` / moduleName).value,
-    projectStage                               := ProjectStage.ProductionReady,
-    ScalaUnidoc / unidoc / unidocProjectFilter := inProjects(`zio-pekko-cluster`),
-    docsPublishBranch                          := "series/2.x"
-  )
-  .enablePlugins(WebsitePlugin)
-  .dependsOn(`zio-pekko-cluster`)
