@@ -2,11 +2,12 @@ package zio.pekko.cluster.pubsub
 
 import org.apache.pekko.actor.ActorSystem
 import com.typesafe.config.{Config, ConfigFactory}
+import org.apache.pekko.cluster.MemberStatus
 import zio.test.Assertion._
 import zio.test._
 import zio.test.TestEnvironment
 import zio.test.ZIOSpecDefault
-import zio.{ExecutionStrategy, ZIO, ZLayer}
+import zio.{ExecutionStrategy, ZIO, ZLayer, durationInt}
 
 object PubSubSpec extends ZIOSpecDefault {
 
@@ -19,20 +20,34 @@ object PubSubSpec extends ZIOSpecDefault {
                                                     |    enabled-transports = ["pekko.remote.artery.canonical"]
                                                     |    artery.canonical {
                                                     |      hostname = "127.0.0.1"
-                                                    |      port = 17357
+                                                    |      port = 0
                                                     |    }
                                                     |  }
                                                     |  cluster {
-                                                    |    seed-nodes = ["pekko://Test@127.0.0.1:17357"]
+                                                    |    seed-nodes = []
+                                                    |    jmx.multi-mbeans-in-same-jvm = on
                                                     |    downing-provider-class = "org.apache.pekko.cluster.sbr.SplitBrainResolverProvider"
                                                     |  }
                                                     |}
            """.stripMargin)
 
+  private def awaitMemberUp(cluster: org.apache.pekko.cluster.Cluster): ZIO[Any, Throwable, Unit] =
+    ZIO.attempt(cluster.selfMember.status).flatMap {
+      case MemberStatus.Up => ZIO.unit
+      case _               => ZIO.sleep(100.millis) *> awaitMemberUp(cluster)
+    }
+
   val actorSystem: ZLayer[Any, Throwable, ActorSystem] =
     ZLayer
       .scoped(
-        ZIO.acquireRelease(ZIO.attempt(ActorSystem("Test", config)))(sys => ZIO.fromFuture(_ => sys.terminate()).either)
+        ZIO.acquireRelease(
+          for {
+            sys     <- ZIO.attempt(ActorSystem("Test", config))
+            cluster <- ZIO.attempt(org.apache.pekko.cluster.Cluster(sys))
+            _       <- ZIO.attempt(cluster.join(cluster.selfAddress))
+            _       <- awaitMemberUp(cluster)
+          } yield sys
+        )(sys => ZIO.fromFuture(_ => sys.terminate()).either)
       )
 
   val topic = "topic"
@@ -102,5 +117,6 @@ object PubSubSpec extends ZIOSpecDefault {
           } yield List(item1, item2)
         )(equalTo(List(msg, msg))).provideLayer(actorSystem)
       }
-    ) @@ TestAspect.executionStrategy(ExecutionStrategy.Sequential)
+    ) @@ TestAspect.executionStrategy(ExecutionStrategy.Sequential) @@ TestAspect.timeout(30.seconds) @@
+      TestAspect.withLiveClock
 }
