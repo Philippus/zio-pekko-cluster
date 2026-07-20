@@ -5,7 +5,7 @@ import org.apache.pekko.cluster.pubsub.DistributedPubSubMediator.{Subscribe, Sub
 import zio.Exit.{Failure, Success}
 import SubscriberImpl.SubscriberActor
 import zio.pekko.cluster.pubsub.{MessageEnvelope, Subscriber}
-import zio.{Promise, Queue, Runtime, Task}
+import zio.{Fiber, Promise, Queue, Runtime, Task, ZIO}
 
 private[pubsub] trait SubscriberImpl[A] extends Subscriber[A] {
   val getActorSystem: ActorSystem
@@ -31,6 +31,8 @@ object SubscriberImpl {
       queue: Queue[A],
       subscribed: Promise[Nothing, Unit]
   ) extends Actor {
+    private var pending: Fiber[Nothing, Unit] =
+      rts.unsafeRun(ZIO.unit.forkDaemon)
 
     mediator ! Subscribe(topic, group, self)
 
@@ -39,10 +41,16 @@ object SubscriberImpl {
         rts.unsafeRunSync(subscribed.succeed(()))
         ()
       case MessageEnvelope(msg) =>
-        rts.unsafeRunAsync(queue.offer(msg.asInstanceOf[A])) {
-          case Success(_)     => ()
-          case Failure(cause) => if (cause.interrupted) self ! PoisonPill // stop listening if the queue was shut down
-        }
+        val previous = pending
+        pending = rts.unsafeRun(
+          (
+            previous.join *>
+              queue.offer(msg.asInstanceOf[A]).unit.catchAllCause { cause =>
+                if (cause.interrupted) ZIO.succeed(self ! PoisonPill).unit
+                else ZIO.unit
+              }
+          ).forkDaemon
+        )
     }
   }
 }
