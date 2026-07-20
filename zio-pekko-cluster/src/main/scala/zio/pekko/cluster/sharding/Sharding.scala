@@ -2,15 +2,16 @@ package zio.pekko.cluster.sharding
 
 import scala.concurrent.duration._
 import scala.reflect.ClassTag
-
 import org.apache.pekko.actor.{Actor, ActorContext, ActorRef, ActorSystem, PoisonPill, Props, ReceiveTimeout}
 import org.apache.pekko.cluster.sharding.ShardRegion.Passivate
-import org.apache.pekko.cluster.sharding.{ClusterSharding, ClusterShardingSettings}
+import org.apache.pekko.cluster.sharding.{ClusterSharding, ClusterShardingSettings, ShardRegion}
 import org.apache.pekko.pattern.{ask => askPattern}
 import org.apache.pekko.util.Timeout
 import zio.pekko.cluster.sharding
 import zio.pekko.cluster.sharding.MessageEnvelope.{MessagePayload, PassivatePayload, PoisonPillPayload}
 import zio.{=!=, Ref, Runtime, Tag, Task, UIO, Unsafe, ZIO, ZLayer}
+
+import scala.annotation.nowarn
 
 /** A `Sharding[M]` is able to send messages of type `M` to a sharded entity or to stop one.
   */
@@ -55,17 +56,8 @@ object Sharding {
                             typeName = name,
                             entityProps = Props(new ShardEntity[R, Msg, State](rts)(onMessage)),
                             settings = ClusterShardingSettings(actorSystem),
-                            extractEntityId = {
-                              case MessageEnvelope(entityId, payload) =>
-                                payload match {
-                                  case MessageEnvelope.PoisonPillPayload    => (entityId, PoisonPill)
-                                  case MessageEnvelope.PassivatePayload     => (entityId, Passivate(PoisonPill))
-                                  case p: MessageEnvelope.MessagePayload[_] => (entityId, p)
-                                }
-                            },
-                            extractShardId = {
-                              case msg: MessageEnvelope => (math.abs(msg.entityId.hashCode) % numberOfShards).toString
-                            }
+                            extractEntityId = extractEntityId,
+                            extractShardId = extractShardId(numberOfShards)
                           )
                         )
     } yield new ShardingImpl[Msg] {
@@ -99,23 +91,28 @@ object Sharding {
                           ClusterSharding(actorSystem).startProxy(
                             typeName = name,
                             role,
-                            extractEntityId = {
-                              case MessageEnvelope(entityId, payload) =>
-                                payload match {
-                                  case MessageEnvelope.PoisonPillPayload    => (entityId, PoisonPill)
-                                  case MessageEnvelope.PassivatePayload     => (entityId, Passivate(PoisonPill))
-                                  case p: MessageEnvelope.MessagePayload[_] => (entityId, p)
-                                }
-                            },
-                            extractShardId = {
-                              case msg: MessageEnvelope => (math.abs(msg.entityId.hashCode) % numberOfShards).toString
-                            }
+                            extractEntityId = extractEntityId,
+                            extractShardId = extractShardId(numberOfShards)
                           )
                         )
     } yield new ShardingImpl[Msg] {
       override val timeout: Timeout            = Timeout(askTimeout)
       override val getShardingRegion: ActorRef = shardingRegion
     }
+
+  private def extractEntityId: ShardRegion.ExtractEntityId = {
+    case MessageEnvelope(entityId, payload) =>
+      payload match {
+        case MessageEnvelope.PoisonPillPayload    => (entityId, PoisonPill)
+        case MessageEnvelope.PassivatePayload     => (entityId, Passivate(PoisonPill))
+        case p: MessageEnvelope.MessagePayload[_] => (entityId, p)
+      }
+  }
+
+  @nowarn("msg=match may not be exhaustive")
+  private def extractShardId(numberOfShards: Int): ShardRegion.ExtractShardId = {
+    case msg: MessageEnvelope              => (math.abs(msg.entityId.hashCode) % numberOfShards).toString
+  }
 
   private[sharding] trait ShardingImpl[Msg] extends Sharding[Msg] {
     implicit val timeout: Timeout
