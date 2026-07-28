@@ -111,7 +111,7 @@ object Sharding {
 
   @nowarn("msg=match may not be exhaustive")
   private def extractShardId(numberOfShards: Int): ShardRegion.ExtractShardId = {
-    case msg: MessageEnvelope              => (math.abs(msg.entityId.hashCode) % numberOfShards).toString
+    case msg: MessageEnvelope => (math.abs(msg.entityId.hashCode) % numberOfShards).toString
   }
 
   private[sharding] trait ShardingImpl[Msg] extends Sharding[Msg] {
