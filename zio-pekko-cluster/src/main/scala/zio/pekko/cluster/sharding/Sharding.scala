@@ -157,7 +157,7 @@ object Sharding {
     def receive: Receive = {
       case SetTimeout(duration) =>
         actorContext.setReceiveTimeout(duration)
-      case ReceiveTimeout       =>
+      case _: ReceiveTimeout    =>
         actorContext.parent ! Passivate(PoisonPill)
       case p: Passivate         =>
         actorContext.parent ! p
