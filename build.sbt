@@ -13,6 +13,7 @@ inThisBuild(
     scalaVersion             := mainScala,
     Test / parallelExecution := false,
     Test / fork              := true,
+    Test / javaOptions += "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED",
     developers               := List(
       Developer(
         "philippus",
